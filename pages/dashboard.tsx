@@ -1,5 +1,6 @@
 import React from 'react';
 import useSWR from 'swr';
+import { Flex, Box, Heading, VStack } from '@chakra-ui/layout';
 
 export default function DashboardPage() {
   const {
@@ -17,15 +18,34 @@ export default function DashboardPage() {
   }
 
   return (
-    <>
-      <h1>dashboard</h1>
-      <ul>
+    <Box
+      m="0 auto"
+      p={5}
+      maxWidth={{
+        sm: '100%',
+        md: '100%',
+        lg: '40em',
+        xl: '50em',
+        '2xl': '74em',
+      }}
+    >
+      <Heading size="xl" mb={3}>
+        dashboard
+      </Heading>
+      <VStack spacing={5}>
         {data?.galleries?.map((item: any) => (
-          <li key={item.id}>
-            <h2>{item.name}</h2>
-          </li>
+          <Flex
+            key={item.id}
+            width="100%"
+            direction="row"
+            radius={10}
+            boxShadow="base"
+            p={3}
+          >
+            <Heading size="md">{item.name}</Heading>
+          </Flex>
         ))}
-      </ul>
-    </>
+      </VStack>
+    </Box>
   );
 }
