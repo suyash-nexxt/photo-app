@@ -5,10 +5,15 @@ const prisma = new PrismaClient();
 
 /* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
 export default (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'DELETE') {
+    console.log(`------------not DELETE, returning 400 `);
+    return res.status(400).end();
+  }
+
   const id: number = parseInt(req.query.id as string);
 
   async function main() {
-    const gallery = await prisma.gallery.findUnique({
+    const gallery = await prisma.gallery.delete({
       where: { id },
     });
 
@@ -18,7 +23,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   return main()
     .catch((e) => {
       console.log(`-----------error retrieving gallery: `, e);
-      return res.status(500).end();
     })
     .finally(async () => {
       await prisma.$disconnect();

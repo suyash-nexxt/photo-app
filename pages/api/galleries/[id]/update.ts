@@ -27,7 +27,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
   return main()
     .catch((e) => {
-      console.log(`-----------error retrieving gallery: `, e);
+      console.log(`-----------error updating gallery: `, e);
     })
     .finally(async () => {
       await prisma.$disconnect();
