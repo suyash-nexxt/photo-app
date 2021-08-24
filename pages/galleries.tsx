@@ -7,7 +7,9 @@ export default function DashboardPage() {
     data,
     isValidating: dashboardIsLoading,
     error: dashboardFetchError,
-  } = useSWR(`/api/dashboard`);
+  } = useSWR(`/api/galleries`);
+
+  console.log(data);
 
   if (dashboardIsLoading) {
     return <h1>Loading dashboard...</h1>;
@@ -33,7 +35,7 @@ export default function DashboardPage() {
         dashboard
       </Heading>
       <VStack spacing={5}>
-        {data?.galleries?.map((item: any) => (
+        {data?.map((item: any) => (
           <Flex
             key={item.id}
             width="100%"
