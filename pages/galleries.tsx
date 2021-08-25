@@ -1,6 +1,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { Flex, Box, Heading, VStack } from '@chakra-ui/layout';
+import { GalleryListItem } from 'components/GalleryListItem';
 
 export default function DashboardPage() {
   const {
@@ -8,8 +9,6 @@ export default function DashboardPage() {
     isValidating: dashboardIsLoading,
     error: dashboardFetchError,
   } = useSWR(`/api/galleries`);
-
-  console.log(data);
 
   if (dashboardIsLoading) {
     return <h1>Loading dashboard...</h1>;
@@ -36,16 +35,7 @@ export default function DashboardPage() {
       </Heading>
       <VStack spacing={5}>
         {data?.map((item: any) => (
-          <Flex
-            key={item.id}
-            width="100%"
-            direction="row"
-            radius={10}
-            boxShadow="base"
-            p={3}
-          >
-            <Heading size="md">{item.name}</Heading>
-          </Flex>
+          <GalleryListItem key={item.id} name={item.name} />
         ))}
       </VStack>
     </Box>

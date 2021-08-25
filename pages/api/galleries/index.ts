@@ -13,7 +13,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(galleries);
   }
 
-  main()
+  return main()
     .catch((e) => {
       throw e;
     })
