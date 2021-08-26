@@ -1,6 +1,6 @@
 import React from 'react';
 import useSWR from 'swr';
-import { Flex, Box, Heading, VStack } from '@chakra-ui/layout';
+import { Box, Heading, VStack } from '@chakra-ui/layout';
 import { GalleryListItem } from 'components/GalleryListItem';
 
 export default function DashboardPage() {
@@ -9,6 +9,16 @@ export default function DashboardPage() {
     isValidating: dashboardIsLoading,
     error: dashboardFetchError,
   } = useSWR(`/api/galleries`);
+
+  const handleGalleryEdit = (e: any, id: any) => {
+    e.preventDefault();
+    console.log(`Editing gallery: ${id}`);
+  };
+
+  const handleGalleryDelete = (e: any, id: any) => {
+    e.preventDefault();
+    console.log(`Editing gallery: ${id}`);
+  };
 
   if (dashboardIsLoading) {
     return <h1>Loading dashboard...</h1>;
@@ -35,7 +45,13 @@ export default function DashboardPage() {
       </Heading>
       <VStack spacing={5}>
         {data?.map((item: any) => (
-          <GalleryListItem key={item.id} name={item.name} />
+          <GalleryListItem
+            key={item.id}
+            name={item.name}
+            onDeleteClick={(e) => handleGalleryDelete(e, item.id)}
+            onEditClick={(e) => handleGalleryEdit(e, item.id)}
+            href={''}
+          />
         ))}
       </VStack>
     </Box>
