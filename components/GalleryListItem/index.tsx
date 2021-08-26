@@ -9,26 +9,16 @@ export interface Props {
   href: string;
   onDeleteClick: (e: any) => any;
   onEditClick: (e: any) => any;
-  key: any;
 }
 
 export const GalleryListItem = ({
   name,
-  key,
   href,
   onDeleteClick,
   onEditClick,
 }: Props) => {
   return (
-    <Flex
-      key={key}
-      width="100%"
-      justifyContent="space-between"
-      direction="row"
-      radius={10}
-      boxShadow="base"
-      p={3}
-    >
+    <>
       <Heading size="md">
         <Link href={href}>{name}</Link>
       </Heading>
@@ -43,9 +33,9 @@ export const GalleryListItem = ({
         <IconButton
           aria-label="Delete this gallery"
           icon={<FaWindowClose />}
-          onCLick={onDeleteClick}
+          onClick={onDeleteClick}
         />
       </HStack>
-    </Flex>
+    </>
   );
 };
