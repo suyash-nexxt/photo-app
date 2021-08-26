@@ -33,6 +33,10 @@ export default function DashboardPage() {
     console.log(`Deleting gallery: ${id}`);
   };
 
+  const handleFormSubmit = () => {
+    console.log('form submitted');
+  };
+
   if (dashboardIsLoading) {
     return <h1>Loading dashboard...</h1>;
   }
@@ -62,7 +66,7 @@ export default function DashboardPage() {
         <Heading size="xl" mb={3}>
           dashboard
         </Heading>
-        <Button as="a" href="/galleries/new" mr={4}>
+        <Button mr={4} onClick={onGalleryCreateOpen}>
           + Gallery
         </Button>
       </Flex>
@@ -89,8 +93,8 @@ export default function DashboardPage() {
       </VStack>
       <GalleryCreateModal
         isOpen={isGalleryCreateOpen}
-        onOpen={onGalleryCreateOpen}
         onClose={onGalleryCreateClose}
+        onSubmit={handleFormSubmit}
       />
     </Box>
   );
