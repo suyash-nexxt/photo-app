@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { GalleryListItem } from 'components/GalleryListItem';
 import { GalleryCreateModal } from 'components/GalleryCreateModal';
+import { Gallery } from '@prisma/client';
 
 export default function DashboardPage() {
   const {
@@ -33,8 +34,9 @@ export default function DashboardPage() {
     console.log(`Deleting gallery: ${id}`);
   };
 
-  const handleFormSubmit = () => {
-    console.log('form submitted');
+  const handleGalleryCreateSubmit = (gallery: Gallery): void => {
+    console.log('form submitted', gallery);
+    onGalleryCreateClose();
   };
 
   if (dashboardIsLoading) {
@@ -94,7 +96,7 @@ export default function DashboardPage() {
       <GalleryCreateModal
         isOpen={isGalleryCreateOpen}
         onClose={onGalleryCreateClose}
-        onSubmit={handleFormSubmit}
+        onSubmit={handleGalleryCreateSubmit}
       />
     </Box>
   );

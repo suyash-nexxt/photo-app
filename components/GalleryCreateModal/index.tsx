@@ -47,14 +47,17 @@ export const GalleryCreateModal = ({
             </FormControl>
             <FormControl id="description">
               <FormLabel>Description</FormLabel>
-              <Textarea name="description" ref={register} />
+              <Textarea name="description" required={true} />
+              <FormErrorMessage mb={2}>This field is required</FormErrorMessage>
             </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary</Button>
+            <Button variant="ghost" type="submit">
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </form>
