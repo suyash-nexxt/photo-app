@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -19,22 +20,36 @@ import { Gallery } from '.prisma/client';
 export interface Props {
   isOpen: boolean;
   onClose: () => any;
-  onSubmit: (gallery: Gallery) => void;
+  onSubmit: (galleryId: number, gallery: Gallery) => void;
+  defaultValues: Gallery;
+  galleryId: number;
 }
 
-export const GalleryCreateModal = ({
+export const GalleryEditModal = ({
   isOpen = false,
-  onSubmit = () => {},
   onClose = () => {},
+  onSubmit,
+  defaultValues,
+  galleryId,
 }: Props) => {
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues });
+
+  const composedOnSubmit = (gallery: any) => {
+    onSubmit(galleryId, gallery);
+  };
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(composedOnSubmit)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Title</ModalHeader>
@@ -47,7 +62,7 @@ export const GalleryCreateModal = ({
             </FormControl>
             <FormControl id="description" isInvalid={!!errors.description}>
               <FormLabel>Description</FormLabel>
-              <Textarea {...register('description', { required: true })} />
+              <Textarea {...register('name', { required: true })} />
               <FormErrorMessage mb={2}>This field is required</FormErrorMessage>
             </FormControl>
           </ModalBody>
