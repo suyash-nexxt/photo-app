@@ -8,9 +8,10 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Gallery } from '@prisma/client';
 import { GalleryListItem } from 'components/GalleryListItem';
 import { GalleryCreateModal } from 'components/GalleryCreateModal';
-import { Gallery } from '@prisma/client';
+import { GalleryEditModal } from 'components/GalleryEditModal';
 
 export default function DashboardPage() {
   const {
