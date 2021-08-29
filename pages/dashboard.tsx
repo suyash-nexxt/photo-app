@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import {
   Flex,
@@ -8,36 +8,105 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Gallery } from '@prisma/client';
+
+import { ErrorAlert } from 'components/ErrorAlert';
 import { GalleryListItem } from 'components/GalleryListItem';
 import { GalleryCreateModal } from 'components/GalleryCreateModal';
 import { GalleryEditModal } from 'components/GalleryEditModal';
+import { GalleryDeleteDialog } from 'components/GalleryDeleteDialog';
+import { create, update, destroy } from '../lib/client/api/Galleries';
+
+import { Gallery, Prisma } from '@prisma/client';
 
 export default function DashboardPage() {
   const {
     data,
     isValidating: dashboardIsLoading,
     error: dashboardFetchError,
+    mutate: mutateGalleries,
   } = useSWR(`/api/galleries`);
+
   const {
     isOpen: isGalleryCreateOpen,
     onClose: onGalleryCreateClose,
     onOpen: onGalleryCreateOpen,
   } = useDisclosure();
 
-  const handleGalleryEdit = (e: any, id: any) => {
+  const {
+    isOpen: isGalleryEditOpen,
+    onClose: onGalleryEditClose,
+    onOpen: onGalleryEditOpen,
+  } = useDisclosure();
+
+  const {
+    isOpen: isGalleryDeleteOpen,
+    onClose: onGalleryDeleteClose,
+    onOpen: onGalleryDeleteOpen,
+  } = useDisclosure();
+
+  const [currentGalleryForEditing, setCurrentGalleryForEditing] =
+    useState(null);
+
+  const [currentGalleryForDeletion, setCurrentGalleryForDeletion] =
+    useState(null);
+
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    onGalleryEditOpen();
+  }, [currentGalleryForEditing]);
+
+  const handleGalleryEdit = (e: any, gallery: any) => {
     e.preventDefault();
-    console.log(`Editing gallery: ${id}`);
+    setCurrentGalleryForEditing(gallery);
+  };
+
+  const handleGalleryEditSubmit = async (id: number, gallery: any) => {
+    try {
+      await update(id, gallery);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while creating the gallery.');
+    } finally {
+      onGalleryEditClose();
+    }
   };
 
   const handleGalleryDelete = (e: any, id: any) => {
     e.preventDefault();
-    console.log(`Deleting gallery: ${id}`);
+    setCurrentGalleryForDeletion(id);
+    onGalleryDeleteOpen();
   };
 
-  const handleGalleryCreateSubmit = (gallery: Gallery): void => {
-    console.log('form submitted', gallery);
-    onGalleryCreateClose();
+  const handleGalleryDeleteSubmit = async (e: any, id: any) => {
+    e.preventDefault();
+
+    try {
+      await destroy(id);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while deleting the gallery');
+    } finally {
+      onGalleryDeleteClose();
+    }
+  };
+
+  const handleGalleryCreateSubmit = async (
+    gallery: Prisma.GalleryCreateInput
+  ): Promise<void> => {
+    try {
+      await create(gallery);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while creating the gallery');
+    } finally {
+      onGalleryCreateClose();
+    }
+  };
+
+  const handleErrorAlertClose = (event: InputEvent) => {
+    event.preventDefault();
+    setError('');
   };
 
   if (dashboardIsLoading) {
