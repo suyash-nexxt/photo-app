@@ -44,7 +44,7 @@ export async function create(
 
   const json = await response.json();
 
-  if (!response.json()) {
+  if (!response.ok) {
     throw json;
   }
 
@@ -65,7 +65,7 @@ export async function update(
 
   const json = await response.json();
 
-  if (!response.json()) {
+  if (!response.ok) {
     throw json;
   }
 
@@ -82,7 +82,7 @@ export async function destroy(id: number): Promise<Gallery> {
 
   const json = await response.json();
 
-  if (!response.json()) {
+  if (!response.ok) {
     throw json;
   }
 

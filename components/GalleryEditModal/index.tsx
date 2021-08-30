@@ -62,7 +62,7 @@ export const GalleryEditModal = ({
             </FormControl>
             <FormControl id="description" isInvalid={!!errors.description}>
               <FormLabel>Description</FormLabel>
-              <Textarea {...register('name', { required: true })} />
+              <Textarea {...register('description', { required: true })} />
               <FormErrorMessage mb={2}>This field is required</FormErrorMessage>
             </FormControl>
           </ModalBody>

@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react';
 
 export interface Props {
-  children: React.ReactElement;
+  children: string;
   onCloseClick: (event: any) => any;
 }
 
