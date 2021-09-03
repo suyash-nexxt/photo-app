@@ -13,7 +13,7 @@ export interface Props {
   isOpen: boolean;
   onCloseClick: () => unknown;
   onConfirmClick: (e: any, id: any) => unknown;
-  galleryId: number;
+  galleryId: Number;
 }
 
 export const GalleryDeleteDialog = ({

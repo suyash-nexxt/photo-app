@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import {
   Flex,
@@ -8,36 +8,109 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Gallery } from '@prisma/client';
+
+import { ErrorAlert } from 'components/ErrorAlert';
 import { GalleryListItem } from 'components/GalleryListItem';
 import { GalleryCreateModal } from 'components/GalleryCreateModal';
 import { GalleryEditModal } from 'components/GalleryEditModal';
+import { GalleryDeleteDialog } from 'components/GalleryDeleteDialog';
+import { create, update, destroy } from '../lib/client/api/Galleries';
+
+import { Prisma, Gallery } from '@prisma/client';
 
 export default function DashboardPage() {
   const {
     data,
     isValidating: dashboardIsLoading,
     error: dashboardFetchError,
+    mutate: mutateGalleries,
   } = useSWR(`/api/galleries`);
+
   const {
     isOpen: isGalleryCreateOpen,
     onClose: onGalleryCreateClose,
     onOpen: onGalleryCreateOpen,
   } = useDisclosure();
 
-  const handleGalleryEdit = (e: any, id: any) => {
-    e.preventDefault();
-    console.log(`Editing gallery: ${id}`);
+  const {
+    isOpen: isGalleryEditOpen,
+    onClose: onGalleryEditClose,
+    onOpen: onGalleryEditOpen,
+  } = useDisclosure();
+
+  const {
+    isOpen: isGalleryDeleteOpen,
+    onClose: onGalleryDeleteClose,
+    onOpen: onGalleryDeleteOpen,
+  } = useDisclosure();
+
+  const [currentGalleryForEditing, setCurrentGalleryForEditing] =
+    useState<Gallery | null>(null);
+
+  const [currentGalleryForDeletion, setCurrentGalleryForDeletion] =
+    useState<Number | null>(null);
+
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    onGalleryEditOpen();
+  }, [currentGalleryForEditing]);
+
+  useEffect(() => {
+    onGalleryDeleteOpen();
+  }, [currentGalleryForDeletion]);
+
+  const handleGalleryCreateSubmit = async (
+    gallery: Prisma.GalleryCreateInput
+  ): Promise<void> => {
+    try {
+      await create(gallery);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while creating the gallery');
+    } finally {
+      onGalleryCreateClose();
+    }
   };
 
-  const handleGalleryDelete = (e: any, id: any) => {
+  const handleGalleryEdit = (e: any, gallery: Gallery) => {
     e.preventDefault();
-    console.log(`Deleting gallery: ${id}`);
+    setCurrentGalleryForEditing(gallery);
   };
 
-  const handleGalleryCreateSubmit = (gallery: Gallery): void => {
-    console.log('form submitted', gallery);
-    onGalleryCreateClose();
+  const handleGalleryEditSubmit = async (id: number, gallery: Gallery) => {
+    try {
+      await update(id, gallery);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while creating the gallery.');
+    } finally {
+      onGalleryEditClose();
+    }
+  };
+
+  const handleGalleryDelete = (e: InputEvent, id: number) => {
+    e.preventDefault();
+    setCurrentGalleryForDeletion(id);
+    onGalleryDeleteOpen();
+  };
+
+  const handleGalleryDeleteSubmit = async (e: InputEvent, id: number) => {
+    e.preventDefault();
+
+    try {
+      await destroy(id);
+      mutateGalleries();
+    } catch (error) {
+      setError('An error occured while deleting the gallery');
+    } finally {
+      onGalleryDeleteClose();
+    }
+  };
+
+  const handleErrorAlertClose = (event: InputEvent) => {
+    event.preventDefault();
+    setError('');
   };
 
   if (dashboardIsLoading) {
@@ -74,6 +147,10 @@ export default function DashboardPage() {
         </Button>
       </Flex>
 
+      {error && (
+        <ErrorAlert onCloseClick={handleErrorAlertClose}>{error}</ErrorAlert>
+      )}
+
       <VStack spacing={5}>
         {data?.map((item: any) => (
           <Flex
@@ -88,17 +165,37 @@ export default function DashboardPage() {
             <GalleryListItem
               name={item.name}
               onDeleteClick={(e) => handleGalleryDelete(e, item.id)}
-              onEditClick={(e) => handleGalleryEdit(e, item.id)}
-              href={''}
+              onEditClick={(e) => handleGalleryEdit(e, item)}
+              href={`/galleries/${item.id}`}
             />
           </Flex>
         ))}
       </VStack>
+
       <GalleryCreateModal
         isOpen={isGalleryCreateOpen}
         onClose={onGalleryCreateClose}
         onSubmit={handleGalleryCreateSubmit}
       />
+
+      {currentGalleryForEditing && (
+        <GalleryEditModal
+          isOpen={isGalleryEditOpen}
+          onClose={onGalleryEditClose}
+          onSubmit={handleGalleryEditSubmit}
+          galleryId={currentGalleryForEditing?.id}
+          defaultValues={currentGalleryForEditing}
+        />
+      )}
+
+      {currentGalleryForDeletion && (
+        <GalleryDeleteDialog
+          isOpen={isGalleryDeleteOpen}
+          onCloseClick={onGalleryDeleteClose}
+          onConfirmClick={handleGalleryDeleteSubmit}
+          galleryId={currentGalleryForDeletion}
+        />
+      )}
     </Box>
   );
 }

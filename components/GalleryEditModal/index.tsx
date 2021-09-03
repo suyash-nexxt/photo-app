@@ -21,7 +21,7 @@ export interface Props {
   isOpen: boolean;
   onClose: () => any;
   onSubmit: (galleryId: number, gallery: Gallery) => void;
-  defaultValues: Gallery;
+  defaultValues: any;
   galleryId: number;
 }
 
@@ -32,6 +32,7 @@ export const GalleryEditModal = ({
   defaultValues,
   galleryId,
 }: Props) => {
+  console.log(defaultValues);
   const {
     register,
     reset,
@@ -62,7 +63,7 @@ export const GalleryEditModal = ({
             </FormControl>
             <FormControl id="description" isInvalid={!!errors.description}>
               <FormLabel>Description</FormLabel>
-              <Textarea {...register('name', { required: true })} />
+              <Textarea {...register('description', { required: true })} />
               <FormErrorMessage mb={2}>This field is required</FormErrorMessage>
             </FormControl>
           </ModalBody>
