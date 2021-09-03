@@ -16,7 +16,7 @@ import { GalleryEditModal } from 'components/GalleryEditModal';
 import { GalleryDeleteDialog } from 'components/GalleryDeleteDialog';
 import { create, update, destroy } from '../lib/client/api/Galleries';
 
-import { Prisma } from '@prisma/client';
+import { Prisma, Gallery } from '@prisma/client';
 
 export default function DashboardPage() {
   const {
@@ -45,10 +45,10 @@ export default function DashboardPage() {
   } = useDisclosure();
 
   const [currentGalleryForEditing, setCurrentGalleryForEditing] =
-    useState(null);
+    useState<Gallery | null>(null);
 
   const [currentGalleryForDeletion, setCurrentGalleryForDeletion] =
-    useState(null);
+    useState<Number | null>(null);
 
   const [error, setError] = useState('');
 
@@ -73,12 +73,12 @@ export default function DashboardPage() {
     }
   };
 
-  const handleGalleryEdit = (e: any, gallery: any) => {
+  const handleGalleryEdit = (e: any, gallery: Gallery) => {
     e.preventDefault();
     setCurrentGalleryForEditing(gallery);
   };
 
-  const handleGalleryEditSubmit = async (id: number, gallery: any) => {
+  const handleGalleryEditSubmit = async (id: number, gallery: Gallery) => {
     try {
       await update(id, gallery);
       mutateGalleries();
@@ -89,13 +89,13 @@ export default function DashboardPage() {
     }
   };
 
-  const handleGalleryDelete = (e: any, id: any) => {
+  const handleGalleryDelete = (e: InputEvent, id: number) => {
     e.preventDefault();
     setCurrentGalleryForDeletion(id);
     onGalleryDeleteOpen();
   };
 
-  const handleGalleryDeleteSubmit = async (e: any, id: any) => {
+  const handleGalleryDeleteSubmit = async (e: InputEvent, id: number) => {
     e.preventDefault();
 
     try {

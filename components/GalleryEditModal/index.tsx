@@ -21,7 +21,7 @@ export interface Props {
   isOpen: boolean;
   onClose: () => any;
   onSubmit: (galleryId: number, gallery: Gallery) => void;
-  defaultValues: Gallery;
+  defaultValues: any;
   galleryId: number;
 }
 
@@ -32,6 +32,7 @@ export const GalleryEditModal = ({
   defaultValues,
   galleryId,
 }: Props) => {
+  console.log(defaultValues);
   const {
     register,
     reset,
