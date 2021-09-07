@@ -32,7 +32,6 @@ export const GalleryEditModal = ({
   defaultValues,
   galleryId,
 }: Props) => {
-  console.log(defaultValues);
   const {
     register,
     reset,
@@ -40,7 +39,7 @@ export const GalleryEditModal = ({
     formState: { errors },
   } = useForm({ defaultValues });
 
-  const composedOnSubmit = (gallery: any) => {
+  const composedOnSubmit = (gallery: Gallery) => {
     onSubmit(galleryId, gallery);
   };
 

@@ -73,7 +73,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleGalleryEdit = (e: any, gallery: Gallery) => {
+  const handleGalleryEdit = (e: InputEvent, gallery: Gallery) => {
     e.preventDefault();
     setCurrentGalleryForEditing(gallery);
   };
