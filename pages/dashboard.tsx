@@ -73,9 +73,13 @@ export default function DashboardPage() {
     }
   };
 
-  const handleGalleryEdit = (e: any, gallery: Gallery) => {
+  const handleGalleryEdit = (e: InputEvent, gallery: Gallery) => {
     e.preventDefault();
     setCurrentGalleryForEditing(gallery);
+  };
+
+  const handleGalleryEditClose = () => {
+    setCurrentGalleryForEditing(null);
   };
 
   const handleGalleryEditSubmit = async (id: number, gallery: Gallery) => {
@@ -181,7 +185,7 @@ export default function DashboardPage() {
       {currentGalleryForEditing && (
         <GalleryEditModal
           isOpen={isGalleryEditOpen}
-          onClose={onGalleryEditClose}
+          onClose={handleGalleryEditClose}
           onSubmit={handleGalleryEditSubmit}
           galleryId={currentGalleryForEditing?.id}
           defaultValues={currentGalleryForEditing}
