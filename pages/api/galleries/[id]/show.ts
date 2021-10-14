@@ -10,6 +10,11 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   async function main() {
     const gallery = await prisma.gallery.findUnique({
       where: { id },
+      include: {
+        photos: {
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     });
 
     return res.status(200).json(gallery);

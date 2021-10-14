@@ -54,10 +54,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     onGalleryEditOpen();
+    // eslint-disable-next-line
   }, [currentGalleryForEditing]);
 
   useEffect(() => {
     onGalleryDeleteOpen();
+    // eslint-disable-next-line
   }, [currentGalleryForDeletion]);
 
   const handleGalleryCreateSubmit = async (
